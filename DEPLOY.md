@@ -31,6 +31,15 @@ Paste your Atlas password when asked. The script prints `MONGODB_URI` and copies
 5. **Apply** → wait for **Live**
 6. Copy API URL → test: `https://YOUR-API.onrender.com/api/health`
 
+**Deploy failed?** Open the failed sync → **smart-leads-api** → **Logs**.
+
+| Log says | Fix |
+|----------|-----|
+| `tsc: not found` | Pull latest `main` (build uses `--include=dev`) and redeploy |
+| `MONGODB_URI is not defined` | Render → Environment → set `MONGODB_URI` |
+| `MongoServerError` / connection | Atlas → Network Access → allow `0.0.0.0/0` |
+| Wrong password in URI | Re-run `./scripts/atlas-uri.sh` and update `MONGODB_URI` |
+
 ### Option B — Manual Web Service (no Blueprint)
 
 1. **New +** → **Web Service** → connect **smart-leads-dashboard**
