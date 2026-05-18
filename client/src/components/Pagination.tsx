@@ -7,13 +7,20 @@ interface PaginationProps {
 }
 
 export function Pagination({ meta, onPageChange }: PaginationProps) {
+  const start = meta.total === 0 ? 0 : (meta.page - 1) * meta.limit + 1;
+  const end = Math.min(meta.page * meta.limit, meta.total);
+  const pageCount = Math.max(meta.totalPages, 1);
+
   return (
     <div className="flex flex-wrap items-center justify-between gap-4 border-t border-slate-100 px-5 py-4 dark:border-slate-800">
       <p className="text-sm text-slate-500 dark:text-slate-400">
-        Page <span className="font-medium text-slate-700 dark:text-slate-200">{meta.page}</span> of{' '}
-        <span className="font-medium text-slate-700 dark:text-slate-200">{meta.totalPages}</span>
+        Showing <span className="font-medium text-slate-700 dark:text-slate-200">{start}–{end}</span> of{' '}
+        <span className="font-medium text-slate-700 dark:text-slate-200">{meta.total}</span>
         <span className="mx-2 text-slate-300">·</span>
-        {meta.total} total leads
+        Page <span className="font-medium text-slate-700 dark:text-slate-200">{meta.page}</span> of{' '}
+        <span className="font-medium text-slate-700 dark:text-slate-200">{pageCount}</span>
+        <span className="mx-2 text-slate-300">·</span>
+        {meta.limit} per page
       </p>
       <div className="flex gap-2">
         <Button

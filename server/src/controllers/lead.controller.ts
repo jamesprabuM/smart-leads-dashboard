@@ -34,21 +34,21 @@ export const createLead = asyncHandler(async (req: AuthRequest, res: Response) =
 });
 
 export const getLeads = asyncHandler(async (req: AuthRequest, res: Response) => {
-  const page = Number(req.query.page) || 1;
+  const pageParam = Math.max(1, Number(req.query.page) || 1);
   const sort = req.query.sort === 'oldest' ? 1 : -1;
   const filter = buildLeadFilter(req.query);
+
+  const total = await Lead.countDocuments(filter);
+  const totalPages = total === 0 ? 0 : Math.ceil(total / PAGE_LIMIT);
+  const page = totalPages === 0 ? 1 : Math.min(pageParam, totalPages);
   const skip = (page - 1) * PAGE_LIMIT;
 
-  const [leads, total] = await Promise.all([
-    Lead.find(filter)
-      .sort({ createdAt: sort })
-      .skip(skip)
-      .limit(PAGE_LIMIT)
-      .populate('createdBy', 'name email'),
-    Lead.countDocuments(filter),
-  ]);
+  const leads = await Lead.find(filter)
+    .sort({ createdAt: sort })
+    .skip(skip)
+    .limit(PAGE_LIMIT)
+    .populate('createdBy', 'name email');
 
-  const totalPages = Math.ceil(total / PAGE_LIMIT);
   const meta: PaginationMeta = {
     page,
     limit: PAGE_LIMIT,

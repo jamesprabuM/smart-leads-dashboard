@@ -44,7 +44,11 @@ export function DashboardPage() {
       if (!params.source) delete params.source;
       const res = await leadsApi.getAll(params);
       setLeads(res.data.data ?? []);
-      setMeta(res.data.meta ?? null);
+      const nextMeta = res.data.meta ?? null;
+      setMeta(nextMeta);
+      if (nextMeta && nextMeta.page !== params.page) {
+        setFilters((f) => ({ ...f, page: nextMeta.page }));
+      }
     } catch {
       setError('Failed to load leads. Please check your connection.');
     } finally {
@@ -53,8 +57,9 @@ export function DashboardPage() {
   }, [filters, debouncedSearch]);
 
   useEffect(() => { fetchLeads(); }, [fetchLeads]);
+
   useEffect(() => {
-    setFilters((f) => ({ ...f, page: 1 }));
+    setFilters((f) => (f.page === 1 ? f : { ...f, page: 1 }));
   }, [debouncedSearch, filters.status, filters.source, filters.sort]);
 
   const qualifiedCount = useMemo(
@@ -162,7 +167,7 @@ export function DashboardPage() {
           <div className="flex justify-center py-20">
             <Spinner />
           </div>
-        ) : leads.length === 0 ? (
+        ) : leads.length === 0 && !(meta && meta.total > 0) ? (
           <div className="flex flex-col items-center justify-center py-20 text-center">
             <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 text-2xl dark:bg-slate-800">
               📋
@@ -243,7 +248,7 @@ export function DashboardPage() {
                 </tbody>
               </table>
             </div>
-            {meta && (
+            {meta && meta.total > 0 && (
               <Pagination meta={meta} onPageChange={(p) => setFilters((f) => ({ ...f, page: p }))} />
             )}
           </>
