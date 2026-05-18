@@ -56,10 +56,13 @@ Paste your Atlas password when asked. The script prints `MONGODB_URI` and copies
 **Option A — Dashboard (easiest)**
 
 1. https://vercel.com/new → import **smart-leads-dashboard**
-2. **Root Directory** → `client`
+2. **Root Directory** → leave as **`.`** (repo root) — root `vercel.json` builds `client/`  
+   **OR** set Root Directory to **`client`** (then remove duplicate build settings)
 3. Environment variable:
    - `VITE_API_URL` = `https://YOUR-API.onrender.com/api`
 4. Deploy → copy site URL
+
+**404 on Vercel?** Root directory was wrong. Use repo root + root `vercel.json`, or set Root Directory to `client` and Framework **Vite**, Output **`dist`**. Then **Redeploy**.
 
 **Option B — GitHub Actions (after one-time setup)**
 
