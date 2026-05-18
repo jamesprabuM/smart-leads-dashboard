@@ -64,6 +64,10 @@ Paste your Atlas password when asked. The script prints `MONGODB_URI` and copies
 
 **404 on Vercel?** Root directory was wrong. Use repo root + root `vercel.json`, or set Root Directory to `client` and Framework **Vite**, Output **`dist`**. Then **Redeploy**.
 
+**Registration / API 405?** The app was calling Vercel instead of Render. Either:
+- Redeploy after pulling `main` (root `vercel.json` proxies `/api` → Render), **or**
+- Set `VITE_API_URL=https://smart-leads-api-sug2.onrender.com/api` in Vercel → **Redeploy** (Vite bakes env at build time).
+
 **Option B — GitHub Actions (after one-time setup)**
 
 Add secrets at https://github.com/jamesprabuM/smart-leads-dashboard/settings/secrets/actions
@@ -73,7 +77,7 @@ Add secrets at https://github.com/jamesprabuM/smart-leads-dashboard/settings/sec
 | `VERCEL_TOKEN` | From vercel.com/account/tokens |
 | `VERCEL_ORG_ID` | Vercel project settings → General |
 | `VERCEL_PROJECT_ID` | Same page |
-| `VITE_API_URL` | `https://YOUR-API.onrender.com/api` |
+   | `VITE_API_URL` | `https://smart-leads-api-sug2.onrender.com/api` (required if not using root `vercel.json` API proxy) |
 
 Push to `main` → auto-deploys client.
 
