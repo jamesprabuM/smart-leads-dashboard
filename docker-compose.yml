@@ -1,0 +1,28 @@
+services:
+  mongo:
+    image: mongo:7
+    # Mongo is only reachable inside the compose network (avoids clashing with local :27017)
+    volumes:
+      - mongo_data:/data/db
+
+  server:
+    build: ./server
+    # API is reached via the client nginx proxy at /api (no host port required)
+    environment:
+      PORT: 5000
+      MONGODB_URI: mongodb://mongo:27017/smart-leads
+      JWT_SECRET: change-this-secret-in-production
+      JWT_EXPIRES_IN: 7d
+      CLIENT_URL: http://localhost
+    depends_on:
+      - mongo
+
+  client:
+    build: ./client
+    ports:
+      - "80:80"
+    depends_on:
+      - server
+
+volumes:
+  mongo_data:
