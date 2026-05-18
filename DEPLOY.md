@@ -20,12 +20,25 @@ Paste your Atlas password when asked. The script prints `MONGODB_URI` and copies
 
 ## Step 2 — Render (API)
 
+**If you see "Payment Information Required":** click **Cancel**. The repo now uses `plan: free` in `render.yaml`. Pull latest `main` and click **Retry**, or use **Manual Web Service** below (no card on many accounts).
+
+### Option A — Blueprint (after `plan: free` fix)
+
 1. Open https://dashboard.render.com/select-repo?type=blueprint
-2. Connect **smart-leads-dashboard**
+2. Connect **smart-leads-dashboard** (branch `main`)
 3. Paste clipboard into **MONGODB_URI**
 4. **CLIENT_URL** → `https://example.com` (temporary)
 5. **Apply** → wait for **Live**
 6. Copy API URL → test: `https://YOUR-API.onrender.com/api/health`
+
+### Option B — Manual Web Service (no Blueprint)
+
+1. **New +** → **Web Service** → connect **smart-leads-dashboard**
+2. **Root Directory:** `server`
+3. **Instance Type:** **Free**
+4. Build: `npm install && npm run build` · Start: `npm start`
+5. Environment: `MONGODB_URI`, `JWT_SECRET` (random string), `JWT_EXPIRES_IN=7d`, `CLIENT_URL=https://example.com`
+6. **Create Web Service**
 
 ---
 

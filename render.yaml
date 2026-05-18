@@ -1,8 +1,9 @@
-# Render Blueprint — deploy from repo root via Dashboard → New → Blueprint
+# Render Blueprint — use plan: free (default "starter" requires payment)
 services:
   - type: web
     name: smart-leads-api
     runtime: node
+    plan: free
     rootDir: server
     buildCommand: npm install && npm run build
     startCommand: npm start
